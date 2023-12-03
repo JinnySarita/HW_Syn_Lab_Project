@@ -33,7 +33,7 @@ module main(
     output wire [3:0] vgaBlue,
     output wire Hsync,
     output wire Vsync,
-    output ws85l
+    output wire [3:0] ws85l
     );
     
     reg [7:0] player1Score;

@@ -4,7 +4,7 @@
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.                   -->
 <!-- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.   -->
 
-<Project Product="Vivado" Version="7" Minor="63" Path="C:/Users/Lenovo/Documents/GitHub/HW_Syn_Lab_Project/Pong.xpr">
+<Project Product="Vivado" Version="7" Minor="63" Path="D:/2023-1/HwSynLab/HW_Syn_Lab_Project/Pong.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="b3486d75fbb64ae38fb810d71cc0aafe"/>
