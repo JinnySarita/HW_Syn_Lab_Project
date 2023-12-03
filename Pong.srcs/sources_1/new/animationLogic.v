@@ -33,7 +33,7 @@ module animationLogic(
     input throwBall,
     input [7:0] totalscorePlayer1,
     input [7:0] totalscorePlayer2,
-    output wire [2:0] rgb,
+    output wire [11:0] rgb,
     output wire scorePlayer1,
     output wire scorePlayer2
 );
@@ -59,26 +59,26 @@ module animationLogic(
     integer leftPaddleNextY; // the distance between paddle and top side of screen
     parameter leftPaddleX = 20; // the distance between bar and left side of screen
     wire displayLeftPaddle; // to display player 1's paddle in vga
-    wire[2:0] rgbLeftPaddle; // player 1's paddle color
+    wire[11:0] rgbLeftPaddle; // player 1's paddle color
 
     // Player 1' score
     wire displayPlayer1Score; // to display player 1's score
     wire player1FirstDigit; // output player 1's first digit from convertor
     wire player1SecondDigit; // output player 1's second digit from convertor
-    wire[2:0] rgbPlayer1Score; // player 1's score color
+    wire[11:0] rgbPlayer1Score; // player 1's score color
 
     // Player 2
     integer rightPaddleY; // the distance between paddle and top side of screen
     integer rightPaddleNextY; // the distance between paddle and top side of screen
     parameter rightPaddleX = 610; // the distance between bar and left side of screen
     wire displayRightPaddle; // to display player 2's paddle in vga
-    wire[2:0] rgbRightPaddle; // player 2's paddle color
+    wire[11:0] rgbRightPaddle; // player 2's paddle color
 
     // Player 2' score
-    wire displayPlayer2Score; // to display player 1's score
-    wire player2FirstDigit; // output player 1's first digit from convertor
-    wire player2SecondDigit; // output player 1's second digit from convertor
-    wire[2:0] rgbPlayer2Score; // player 1's score color
+    wire displayPlayer2Score; // to display player 2's score
+    wire player2FirstDigit; // output player 2's first digit from convertor
+    wire player2SecondDigit; // output player 2's second digit from convertor
+    wire[11:0] rgbPlayer2Score; // player 2's score color
 
     // Ball
     integer ballX; // the distance between the ball and left side of the screen
@@ -90,7 +90,7 @@ module animationLogic(
     integer velocityYReg; // current vertical velocity of the ball
     integer velocityYNext; // next vertical velocity of the ball
     wire displayBall; // to display ball in vga
-    wire[2:0] rgbBall; // ball color
+    wire[11:0] rgbBall; // ball color
 
     // Refresh the display
     reg [19:0] refreshReg;
@@ -102,8 +102,8 @@ module animationLogic(
     wire[5:0] outputMux;
 
     // RGB buffer
-    reg[2:0] rgbReg; 
-    wire[2:0] rgbNext; 
+    reg[11:0] rgbReg; 
+    wire[11:0] rgbNext; 
 
     // Initialize
     initial begin
@@ -301,29 +301,29 @@ module animationLogic(
 
     // display left paddle object on the screen
     assign displayLeftPaddle = y < leftPaddleY & y > leftPaddleY - paddleHeight & x > leftPaddleX & x < leftPaddleX + paddleWidth ? 1'b1 : 1'b0; 
-    assign rgbLeftPaddle = 3'b100; // color of left paddle: blue
+    assign rgbLeftPaddle = 12'b111111001001; // color of left paddle
 
     // display right paddle object on the screen
     assign displayRightPaddle = y < rightPaddleY & y > rightPaddleY - paddleHeight & x > rightPaddleX & x < rightPaddleX + paddleWidth ? 1'b1 : 1'b0; 
-    assign rgbRightPaddle = 3'b001; // color of left paddle: red
+    assign rgbRightPaddle = 12'b100111001011; // color of left paddle
 
     // display ball object on the screen
     assign displayBall = (x - ballX) * (x - ballX) + (y - ballY) * (y - ballY) <= ballRadius * ballRadius ? 1'b1 : 1'b0; 
-    assign rgbBall = 3'b111; // color of ball: white
+    assign rgbBall = 12'b100010110100; // color of ball
 
     // display player 1 score on the screen
     assign displayPlayer1Score = x >= 204 & x < 220 & y >= 80 & y < 88; 
     numberToPixel player1FirstDigitConvertor(totalscorePlayer1[7:4], y - 80, x - 204, player1FirstDigit);
     numberToPixel player1SecondDigitConvertor(totalscorePlayer1[3:0], y - 80, x - 212, player1SecondDigit);
-    assign rgbPlayer1Score = x >= 212 ? player1SecondDigit ? 3'b111 : 3'b000
-                                    : player1FirstDigit ? 3'b111 : 3'b000; // color of score: white if that area contain number
+    assign rgbPlayer1Score = x >= 212 ? player1SecondDigit ? 12'b111111111111 : 12'b000000000000
+                                    : player1FirstDigit ? 12'b111111111111 : 12'b000000000000; // color of score: white if that area contain number
 
     // display player 2 score on the screen
     assign displayPlayer2Score = x >= 420 & x < 436 & y >= 80 & y < 88; 
     numberToPixel player2FirstDigitConvertor(totalscorePlayer2[7:4], y - 80, x - 420, player2FirstDigit);
     numberToPixel player2SecondDigitConvertor(totalscorePlayer2[3:0], y - 80, x - 428, player2SecondDigit);
-    assign rgbPlayer2Score = x >= 428 ? player2SecondDigit ? 3'b111 : 3'b000
-                                    : player2FirstDigit ? 3'b111 : 3'b000; // color of score: white if that area contain number
+    assign rgbPlayer2Score = x >= 428 ? player2SecondDigit ? 12'b111111111111 : 12'b000000000000
+                                    : player2FirstDigit ? 12'b111111111111 : 12'b000000000000; // color of score: white if that area contain number
 
     always @(posedge clk) begin 
         rgbReg <= rgbNext;   
@@ -333,7 +333,7 @@ module animationLogic(
     assign outputMux = {videoOn, displayLeftPaddle, displayRightPaddle, displayBall, displayPlayer1Score, displayPlayer2Score}; 
 
     // assign rgbNext from outputMux.
-    assign rgbNext = outputMux === 6'b100000 ? 3'b000: 
+    assign rgbNext = outputMux === 6'b100000 ? 12'b000000000000: 
                     outputMux === 6'b110000 ? rgbLeftPaddle: 
                     outputMux === 6'b110100 ? rgbLeftPaddle: 
                     outputMux === 6'b101000 ? rgbRightPaddle: 
@@ -343,7 +343,7 @@ module animationLogic(
                     outputMux === 6'b100110 ? rgbBall:
                     outputMux === 6'b100010 ? rgbPlayer1Score:
                     outputMux === 6'b100001 ? rgbPlayer2Score:
-                    3'b000;
+                    12'b000000000000;
  
     // output part
     assign rgb = rgbReg; 

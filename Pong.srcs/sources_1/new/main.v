@@ -43,7 +43,7 @@ module main(
     wire [3:0] ps11, ps12, ps21, ps22;
     wire [4:0] ws85l;
     wire [19:0] clk_div;
-    wire [2:0] rgb_out;
+    wire [11:0] rgb_out;
     wire scorePlayer1Count;
     wire scorePlayer2Count;
     
@@ -53,9 +53,9 @@ module main(
     assign ps21 = player2Score[7:4]; // player2 score 1st digit
     assign ps22 = player2Score[3:0]; // player2 score 2nd digit
     assign {player1Up,player1Down,player2Up,player2Down,throwBall} = ws85l; // assign ws85l to player1Up, player1Down, player2Up, player2Down, throwBall
-    assign vgaBlue = {rgb_out[2],rgb_out[2],rgb_out[2]}; // assign rgb_out to vgaBlue, vgaGreen, vgaRed
-    assign vgaGreen = {rgb_out[1],rgb_out[1],rgb_out[1]};
-    assign vgaRed = {rgb_out[0],rgb_out[0],rgb_out[0]};
+    assign vgaBlue = {rgb_out[3],rgb_out[2],rgb_out[1],rgb_out[0]}; // assign rgb_out to vgaBlue, vgaGreen, vgaRed
+    assign vgaGreen = {rgb_out[7],rgb_out[6],rgb_out[5],rgb_out[4]};
+    assign vgaRed = {rgb_out[11],rgb_out[10],rgb_out[9],rgb_out[8]};
     
     generate for(genvar i = 0;i<19;i = i+1) begin // divine clock by 2^19 for 7 segment display
         clock_divider div1(clk_div[i],clk_div[i+1]);
